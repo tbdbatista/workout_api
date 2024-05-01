@@ -9,5 +9,3 @@ class Atleta(BaseModel):
     peso: Annotated[PositiveFloat, Field(description='Peso do atleta', example=75.5)]
     altura: Annotated[PositiveFloat, Field(description='Altura do atleta', example=1.70)]
     sexo: Annotated[str, Field(description='Sexo do atleta', example='M', max_length=1)]
-    categoria: Annotated[CategoriaIn, Field(description='Categoria do atleta')]
-    centro_treinamento: Annotated[CentroTreinamentoAtleta, Field(description='Centro de treinamento do atleta')]
