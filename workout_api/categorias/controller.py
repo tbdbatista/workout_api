@@ -36,6 +36,25 @@ async def post(
 async def query(
     db_session: DatabaseDependency, 
 ) -> list[CategoriaOut]:
-    categorias: list[CategoriaOut] = (await db_session.execute(select(CategoriaModel))).scalars().all()
+    categorias: list[CategoriaOut] = (
+        await db_session
+        .execute(select(CategoriaModel))
+        ).scalars().all()
     
     return categorias
+
+@router.get(
+    '/{id}', 
+    summary='Consultar Categoria por id',
+    status_code=status.HTTP_200_OK,
+    response_model=CategoriaOut,
+)
+async def query(
+    id: UUID4,
+    db_session: DatabaseDependency, 
+) -> CategoriaOut:
+    categoria: CategoriaOut = (
+        await db_session.execute(select(CategoriaModel).filter_by(id=id))
+        ).scalars().first()
+    
+    return categoria
