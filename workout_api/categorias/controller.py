@@ -1,5 +1,5 @@
 from uuid import uuid4
-from fastapi import APIRouter, Body, status
+from fastapi import APIRouter, Body, HTTPException, status
 from pydantic import UUID4
 from workout_api.categorias.schemas import CategoriaIn, CategoriaOut
 from workout_api.categorias.models import CategoriaModel
@@ -56,5 +56,10 @@ async def query(
     categoria: CategoriaOut = (
         await db_session.execute(select(CategoriaModel).filter_by(id=id))
         ).scalars().first()
+    
+    if not categoria:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Categoria não encontrada com o id: {id}"
     
     return categoria
