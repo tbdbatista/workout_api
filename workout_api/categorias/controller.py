@@ -61,5 +61,6 @@ async def query(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Categoria não encontrada com o id: {id}"
+        )
     
     return categoria
