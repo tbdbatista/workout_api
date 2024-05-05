@@ -140,3 +140,24 @@ async def delete(id: UUID4, db_session: DatabaseDependency) -> None:
     
     await db_session.delete(atleta)
     await db_session.commit()
+
+
+### Desafio DIO
+@router.get(
+    '/cpf/{cpf}', 
+    summary='Consultar Atleta pelo CPF',
+    status_code=status.HTTP_200_OK,
+    response_model=AtletaOut,
+)
+async def get_by_cpf(cpf: str, db_session: DatabaseDependency) -> AtletaOut:
+    atleta: AtletaOut = (
+        await db_session.execute(select(AtletaModel).filter_by(cpf=cpf))
+    ).scalars().first()
+
+    if not atleta:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, 
+            detail=f'Atleta não encontrado no CPF: {cpf}'
+        )
+    
+    return atleta
