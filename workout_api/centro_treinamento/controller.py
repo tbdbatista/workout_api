@@ -13,7 +13,7 @@ router = APIRouter()
     '/', 
     summary='Criar um novo Centro de treinamento',
     status_code=status.HTTP_201_CREATED,
-    response_model=None,
+    response_model=CentroTreinamentoOut,
 )
 async def post(
     db_session: DatabaseDependency, 
@@ -32,7 +32,7 @@ async def post(
     '/', 
     summary='Consultar todos os centros de treinamento',
     status_code=status.HTTP_200_OK,
-    response_model=None,
+    response_model=list[CentroTreinamentoOut],
 )
 async def query(db_session: DatabaseDependency) -> list[CentroTreinamentoOut]:
     centros_treinamento_out: list[CentroTreinamentoOut] = (
@@ -46,7 +46,7 @@ async def query(db_session: DatabaseDependency) -> list[CentroTreinamentoOut]:
     '/{id}', 
     summary='Consulta um centro de treinamento pelo id',
     status_code=status.HTTP_200_OK,
-    response_model=None,
+    response_model=CentroTreinamentoOut,
 )
 async def get(id: UUID4, db_session: DatabaseDependency) -> CentroTreinamentoOut:
     centro_treinamento_out: CentroTreinamentoOut = (

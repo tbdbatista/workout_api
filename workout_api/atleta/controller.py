@@ -3,7 +3,7 @@ from uuid import uuid4
 from fastapi import APIRouter, Body, HTTPException, status
 from pydantic import UUID4
 
-from workout_api.atleta.schemas import Atleta, AtletaOut, AtletaUpdate#, AtletaUpdate
+from workout_api.atleta.schemas import AtletaIn, AtletaOut, AtletaUpdate#, AtletaUpdate
 from workout_api.atleta.models import AtletaModel
 from workout_api.categorias.models import CategoriaModel
 from workout_api.centro_treinamento.models import CentroTreinamentoModel
@@ -21,7 +21,7 @@ router = APIRouter()
 )
 async def post(
     db_session: DatabaseDependency, 
-    atleta_in: Atleta = Body(...)
+    atleta_in: AtletaIn = Body(...)
 ):
     categoria_nome = atleta_in.categoria.nome
     centro_treinamento_nome = atleta_in.centro_treinamento.nome
@@ -49,7 +49,7 @@ async def post(
         atleta_out = AtletaOut(
             id=uuid4(),
             created_at=datetime.now(datetime.utcoffset()),
-              **atleta_in.model_dump()
+            **atleta_in.model_dump()
             )
         atleta_model = AtletaModel(
             **atleta_out.model_dump(exclude={'categoria', 'centro_treinamento'})

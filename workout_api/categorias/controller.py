@@ -48,11 +48,11 @@ async def query(
     summary='Consultar Categoria por id',
     status_code=status.HTTP_200_OK,
     response_model=CategoriaOut,
-)
-async def query(
+    )
+async def get(
     id: UUID4,
     db_session: DatabaseDependency, 
-) -> CategoriaOut:
+    ) -> CategoriaOut:
     categoria: CategoriaOut = (
         await db_session.execute(select(CategoriaModel).filter_by(id=id))
         ).scalars().first()
