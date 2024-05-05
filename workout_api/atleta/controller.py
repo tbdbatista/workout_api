@@ -11,6 +11,8 @@ from workout_api.centro_treinamento.models import CentroTreinamentoModel
 from workout_api.contrib.dependencies import DatabaseDependency
 from sqlalchemy.future import select
 
+from fastapi_pagination import Page, paginate
+
 router = APIRouter()
 
 @router.post(
@@ -67,12 +69,12 @@ async def post(
     '/', 
     summary='Consultar todos os Atletas',
     status_code=status.HTTP_200_OK,
-    response_model=list[AtletaOut],
+    response_model=Page[AtletaOut],
 )
 async def query(db_session: DatabaseDependency) -> list[AtletaOut]:
     atletas: list[AtletaOut] = (await db_session.execute(select(AtletaModel))).scalars().all()
     
-    return [AtletaOut.model_validate(atleta) for atleta in atletas]
+    return paginate([AtletaOut.model_validate(atleta) for atleta in atletas])
 
 
 @router.get(
