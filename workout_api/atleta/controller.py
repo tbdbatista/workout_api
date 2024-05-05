@@ -13,6 +13,8 @@ from sqlalchemy.future import select
 
 from fastapi_pagination import Page, paginate
 
+from sqlalchemy import exc
+
 router = APIRouter()
 
 @router.post(
@@ -56,6 +58,11 @@ async def post(
         
         db_session.add(atleta_model)
         await db_session.commit()
+    except exc.IntegrityError:
+        raise HTTPException(
+            status_code=status.HTTP_303_SEE_OTHER, 
+            detail='Já existe um atleta cadastrado com esse cpf'
+        )
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
