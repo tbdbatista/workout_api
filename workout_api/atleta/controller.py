@@ -3,7 +3,7 @@ from uuid import uuid4
 from fastapi import APIRouter, Body, HTTPException, status
 from pydantic import UUID4
 
-from workout_api.atleta.schemas import Atleta, AtletaOut, AtletaUpdate
+from workout_api.atleta.schemas import Atleta, AtletaOut, AtletaUpdate#, AtletaUpdate
 from workout_api.atleta.models import AtletaModel
 from workout_api.categorias.models import CategoriaModel
 from workout_api.centro_treinamento.models import CentroTreinamentoModel
@@ -46,8 +46,14 @@ async def post(
             detail=f'O centro de treinamento {centro_treinamento_nome} não foi encontrado.'
         )
     try:
-        atleta_out = AtletaOut(id=uuid4(), created_at=datetime.utcnow(), **atleta_in.model_dump())
-        atleta_model = AtletaModel(**atleta_out.model_dump(exclude={'categoria', 'centro_treinamento'}))
+        atleta_out = AtletaOut(
+            id=uuid4(),
+            created_at=datetime.now(datetime.utcoffset()),
+              **atleta_in.model_dump()
+            )
+        atleta_model = AtletaModel(
+            **atleta_out.model_dump(exclude={'categoria', 'centro_treinamento'})
+            )
 
         atleta_model.categoria_id = categoria.pk_id
         atleta_model.centro_treinamento_id = centro_treinamento.pk_id
