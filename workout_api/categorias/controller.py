@@ -26,35 +26,41 @@ async def post(
     await db_session.commit()
 
     return categoria_out
-    
-    
+
 @router.get(
     '/', 
-    summary='Consultar todas as Categorias',
+    summary='Consultar todas Categorias',
     status_code=status.HTTP_200_OK,
     response_model=list[CategoriaOut],
 )
-async def query(db_session: DatabaseDependency) -> list[CategoriaOut]:
-    categorias: list[CategoriaOut] = (await db_session.execute(select(CategoriaModel))).scalars().all()
+async def query(
+    db_session: DatabaseDependency, 
+) -> list[CategoriaOut]:
+    categorias: list[CategoriaOut] = (
+        await db_session
+        .execute(select(CategoriaModel))
+        ).scalars().all()
     
     return categorias
 
-
 @router.get(
     '/{id}', 
-    summary='Consulta uma Categoria pelo id',
+    summary='Consultar Categoria por id',
     status_code=status.HTTP_200_OK,
     response_model=CategoriaOut,
 )
-async def get(id: UUID4, db_session: DatabaseDependency) -> CategoriaOut:
+async def query(
+    id: UUID4,
+    db_session: DatabaseDependency, 
+) -> CategoriaOut:
     categoria: CategoriaOut = (
         await db_session.execute(select(CategoriaModel).filter_by(id=id))
-    ).scalars().first()
-
+        ).scalars().first()
+    
     if not categoria:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
-            detail=f'Categoria não encontrada no id: {id}'
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Categoria não encontrada com o id: {id}"
         )
     
     return categoria
